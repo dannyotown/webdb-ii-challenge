@@ -25,4 +25,25 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.post("/", async (req, res, next) => {
+  try {
+    const body = {
+      VIN: req.body.VIN,
+      make: req.body.make,
+      model: req.body.model,
+      mileage: req.body.mileage,
+      transmissionType: req.body.transmissionType || null,
+      titleStatus: req.body.titleStatus || null
+    };
+    const [id] = await db("cars").insert(body);
+    res.json(
+      await db("cars")
+        .where("id", id)
+        .first()
+    );
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
